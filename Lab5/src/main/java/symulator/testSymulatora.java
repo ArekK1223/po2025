@@ -43,4 +43,5 @@ public class testSymulatora {
         System.out.println("Aktualny bieg: " + skrzynia.aktualnyBieg);
         System.out.println("Sprzęgło wciśnięte: " + sprzeglo.stanSprzegla);
     }
+
 }
