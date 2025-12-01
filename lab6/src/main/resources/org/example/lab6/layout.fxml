@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.example.lab6.Controller"
+            prefHeight="600.0" prefWidth="900.0">
+
+    <!-- TOP -->
+    <top>
+        <HBox spacing="10" alignment="CENTER_LEFT" style="-fx-padding: 10; -fx-background-color: #dddddd;">
+            <Label text="Panel Sterowania Samochodem" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+        </HBox>
+    </top>
+
+    <!-- LEFT - Panel sterowania -->
+    <left>
+        <ScrollPane fitToWidth="true" hbarPolicy="NEVER">
+            <content>
+                <VBox spacing="5" style="-fx-padding: 10;">
+
+                    <!-- WYBÓR SAMOCHODU -->
+                    <TitledPane text="Wybierz pojazd" expanded="true" collapsible="true">
+                        <content>
+                            <VBox spacing="10">
+                                <Label text="Dostępne samochody:"/>
+                                <!-- Zgodnie z instrukcją: ComboBox -->
+                                <ComboBox fx:id="carComboBox" promptText="Wybierz..." maxWidth="Infinity" onAction="#onCarSelection"/>
+                            </VBox>
+                        </content>
+                    </TitledPane>
+
+                    <!-- DANE SAMOCHODU -->
+                    <TitledPane text="Informacje o samochodzie" expanded="true" collapsible="true">
+                        <content>
+                            <VBox spacing="10">
+                                <Label text="Model:"/>
+                                <!-- Zgodnie z instrukcją: końcówka TextField -->
+                                <TextField fx:id="modelTextField" promptText="Model auta"/>
+
+                                <Label text="Nr rejestracyjny:"/>
+                                <TextField fx:id="plateTextField" promptText="Nr rejestracyjny"/>
+
+                                <Separator/>
+
+                                <HBox spacing="10" alignment="CENTER">
+                                    <!-- Zgodnie z instrukcją: końcówka Button i metoda on... -->
+                                    <Button fx:id="startButton" text="Włącz" style="-fx-text-fill: green;" onAction="#onStartButton"/>
+                                    <Button fx:id="stopButton" text="Wyłącz" style="-fx-text-fill: red;" onAction="#onStopButton"/>
+                                </HBox>
+                            </VBox>
+                        </content>
+                    </TitledPane>
+
+                    <!-- SKRZYNIA BIEGÓW -->
+                    <TitledPane text="Skrzynia biegów" expanded="false" collapsible="true">
+                        <content>
+                            <VBox spacing="10">
+                                <Label text="Aktualny bieg:"/>
+                                <TextField fx:id="gearTextField" text="N" editable="false"/>
+
+                                <HBox spacing="5">
+                                    <Button fx:id="gearUpButton" text="Bieg +" maxWidth="Infinity" HBox.hgrow="ALWAYS" onAction="#onGearUpButton"/>
+                                    <Button fx:id="gearDownButton" text="Bieg -" maxWidth="Infinity" HBox.hgrow="ALWAYS" onAction="#onGearDownButton"/>
+                                </HBox>
+                            </VBox>
+                        </content>
+                    </TitledPane>
+
+                    <!-- SILNIK -->
+                    <TitledPane text="Silnik" expanded="false" collapsible="true">
+                        <content>
+                            <VBox spacing="10">
+                                <Label text="Obroty (RPM):"/>
+                                <TextField fx:id="rpmTextField" text="0" editable="false"/>
+                            </VBox>
+                        </content>
+                    </TitledPane>
+
+                </VBox>
+            </content>
+        </ScrollPane>
+    </left>
+
+    <!-- CENTER - Wizualizacja -->
+    <center>
+        <VBox alignment="CENTER" style="-fx-padding: 20; -fx-background-color: #ffffff;">
+            <Label text="Wizualizacja" style="-fx-font-size: 24px; -fx-text-fill: #aaa;"/>
+            <ImageView fx:id="carImageView" fitHeight="250.0" fitWidth="400.0" preserveRatio="true">
+                <image>
+                    <Image url="https://img.icons8.com/fluency/240/car.png"/>
+                </image>
+            </ImageView>
+        </VBox>
+    </center>
+
+</BorderPane>
