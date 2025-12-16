@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.lab6.HelloController">
+
+    <top>
+        <VBox>
+            <MenuBar>
+                <Menu text="File"/>
+                <Menu text="Edit"/>
+            </MenuBar>
+
+            <ToolBar>
+                <Label text="Samochód: "/>
+                <ComboBox fx:id="carComboBox" prefWidth="150.0" promptText="Wybierz..." onAction="#onCarSelection"/>
+                <Button text="Dodaj nowy" fx:id="addButton" onAction="#onAddButton"/>
+                <Button text="Usuń" fx:id="removeButton"/>
+            </ToolBar>
+        </VBox>
+    </top>
+
+    <left>
+        <VBox spacing="10.0" prefWidth="280.0">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+
+            <TitledPane text="Samochód" collapsible="true" expanded="true">
+                <VBox spacing="5.0">
+                    <Label text="Model"/><TextField fx:id="modelTextField" editable="false"/>
+                    <Label text="Nr rejestracyjny"/><TextField fx:id="plateTextField" editable="false"/>
+                    <Label text="Waga"/><TextField fx:id="weightTextField" editable="false"/>
+                    <Label text="Prędkość"/><TextField fx:id="speedTextField" editable="false"/>
+                    <HBox spacing="10.0">
+                        <Button text="Włącz" fx:id="startButton" onAction="#onStartButton"/>
+                        <Button text="Wyłącz" fx:id="stopButton" onAction="#onStopButton"/>
+                    </HBox>
+                </VBox>
+            </TitledPane>
+
+            <TitledPane text="Skrzynia Biegów" collapsible="true" expanded="false">
+                <VBox spacing="5.0">
+                    <Label text="Nazwa"/><TextField fx:id="gearboxNameTextField" editable="false"/>
+                    <Label text="Cena"/><TextField fx:id="gearboxPriceTextField" editable="false"/>
+                    <Label text="Waga"/><TextField fx:id="gearboxWeightTextField" editable="false"/>
+                    <Label text="Bieg"/><TextField fx:id="gearTextField" editable="false"/>
+                    <HBox spacing="10.0">
+                        <Button text="Zwiększ bieg" fx:id="gearUpButton" onAction="#onGearUpButton"/>
+                        <Button text="Zmniejsz bieg" fx:id="gearDownButton" onAction="#onGearDownButton"/>
+                    </HBox>
+                </VBox>
+            </TitledPane>
+
+            <TitledPane text="Silnik" collapsible="true" expanded="false">
+                <VBox spacing="5.0">
+                    <Label text="Nazwa"/><TextField fx:id="engineNameTextField" editable="false"/>
+                    <Label text="Cena"/><TextField fx:id="enginePriceTextField" editable="false"/>
+                    <Label text="Waga"/><TextField fx:id="engineWeightTextField" editable="false"/>
+                    <Label text="Obroty"/><TextField fx:id="rpmTextField" editable="false"/>
+                    <HBox spacing="10.0">
+                        <Button text="Dodaj gazu" fx:id="gasButton" onAction="#onGasButton"/>
+                        <Button text="Ujmij gazu" fx:id="brakeButton" onAction="#onBrakeButton"/>
+                    </HBox>
+                </VBox>
+            </TitledPane>
+
+            <TitledPane text="Sprzęgło" collapsible="true" expanded="false">
+                <VBox spacing="5.0">
+                    <Label text="Nazwa"/><TextField fx:id="clutchNameTextField" editable="false"/>
+                    <Label text="Cena"/><TextField fx:id="clutchPriceTextField" editable="false"/>
+                    <Label text="Waga"/><TextField fx:id="clutchWeightTextField" editable="false"/>
+                    <Label text="Stan"/><TextField fx:id="clutchStateTextField" editable="false"/>
+                    <HBox spacing="10.0">
+                        <Button text="Wciśnij" fx:id="clutchPressButton" onAction="#onClutchPressButton"/>
+                        <Button text="Zwolnij" fx:id="clutchReleaseButton" onAction="#onClutchReleaseButton"/>
+                    </HBox>
+                </VBox>
+            </TitledPane>
+        </VBox>
+    </left>
+
+    <center>
+        <StackPane style="-fx-background-color: lightgreen;">
+            <VBox alignment="CENTER" spacing="10">
+                <ImageView fx:id="carImageView" fitHeight="200.0" fitWidth="300.0" preserveRatio="true">
+                    <image>
+                        <Image url="https://img.icons8.com/fluency/240/car.png"/>
+                    </image>
+                </ImageView>
+                <Label text="Car"/>
+            </VBox>
+        </StackPane>
+    </center>
+
+</BorderPane>

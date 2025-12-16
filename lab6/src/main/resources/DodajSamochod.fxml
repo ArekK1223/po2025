@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+
+<GridPane alignment="TOP_CENTER" hgap="10" vgap="10"
+          xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+          fx:controller="org.example.lab6.DodajSamochodController">
+
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+    </padding>
+
+    <Label text="Dodaj nowy samochód" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="0" style="-fx-font-weight: bold;"/>
+
+    <Label text="Model:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+    <TextField fx:id="modelInput" promptText="np. Tesla Model S" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+    <Label text="Nr rejestracyjny:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+    <TextField fx:id="plateInput" promptText="np. XYZ1234" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+    <Label text="Waga (kg):" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+    <TextField fx:id="weightInput" promptText="np. 1800.0" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+    <Label text="Max Obroty Silnika:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+    <TextField fx:id="maxRpmInput" promptText="np. 7000" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+
+    <Label text="Max Liczba Biegów:" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+    <TextField fx:id="maxGearsInput" promptText="np. 6" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+
+    <HBox spacing="10" alignment="CENTER_RIGHT" GridPane.rowIndex="6" GridPane.columnSpan="2">
+        <Button text="Anuluj" onAction="#onCancelButton"/>
+        <Button text="Dodaj" fx:id="addButton" onAction="#onDodajButton"/>
+    </HBox>
+
+</GridPane>
