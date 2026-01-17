@@ -8,6 +8,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="Lab5" />
         <module name="lab6" />
+        <module name="magazyn" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>

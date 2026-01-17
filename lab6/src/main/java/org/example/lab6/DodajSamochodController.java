@@ -49,10 +49,11 @@ public class DodajSamochodController {
             Silnik nowySilnik = new Silnik(maxRpm, 0);
             SkrzyniaBiegow nowaSkrzynia = new SkrzyniaBiegow(0, maxGears);
             Sprzeglo noweSprzeglo = new Sprzeglo();
+            String domyslnaSciezka = "/images/car.png";
 
             // 4. Tworzenie obiektu Samochod (Zakładamy, że konstruktor Samochod jest poprawny)
             Samochod nowySamochod = new Samochod(model, registration, weight,
-                    nowySilnik, nowaSkrzynia, noweSprzeglo);
+                    nowySilnik, nowaSkrzynia, noweSprzeglo, domyslnaSciezka);
 
             // 5. KLUCZOWE: Wywołanie statycznej metody w HelloController
             HelloController.addCarToMapAndList(nowySamochod);

@@ -1,11 +1,13 @@
 package org.example.lab6;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.HashMap;
@@ -15,9 +17,11 @@ import org.example.lab6.model.Samochod;
 import org.example.lab6.model.Silnik;
 import org.example.lab6.model.SkrzyniaBiegow;
 import org.example.lab6.model.Sprzeglo;
+import org.example.lab6.model.Listener;
+import org.example.lab6.model.Pozycja;
 
 
-public class HelloController {
+public class HelloController implements Listener{
     private Silnik silnik;
     private SkrzyniaBiegow skrzyniaBiegow;
     private Sprzeglo sprzeglo;
@@ -26,6 +30,8 @@ public class HelloController {
 
     @FXML private ComboBox<String> carComboBox;
     @FXML private ImageView carImageView;
+
+    @FXML private Pane mapa;
 
     @FXML private TextField modelTextField;
     @FXML private TextField plateTextField;
@@ -52,13 +58,12 @@ public class HelloController {
         System.out.println("HelloController initialized");
 
         Samochod audiA4 = new Samochod("Audi A4", "KR12345", 1550.0,
-                new Silnik(7500, 0), new SkrzyniaBiegow(0, 7), new Sprzeglo());
+                new Silnik(7500, 0), new SkrzyniaBiegow(0, 7), new Sprzeglo(), "/images/audi.png");
 
         Samochod bmw3 = new Samochod("BMW 3 Series", "WR00001", 1480.0,
-                new Silnik(8000, 0), new SkrzyniaBiegow(0, 6), new Sprzeglo());
-
+                new Silnik(8000, 0), new SkrzyniaBiegow(0, 6), new Sprzeglo(), "/images/bmw.png");
         Samochod fiatPanda = new Samochod("Fiat Panda", "EL99999", 950.0,
-                new Silnik(5500, 0), new SkrzyniaBiegow(0, 5), new Sprzeglo());
+                new Silnik(5500, 0), new SkrzyniaBiegow(0, 5), new Sprzeglo(), "/images/fiat.png");
 
         String keyA4 = audiA4.getModel() + " (" + audiA4.getNrRejestracyjny() + ")";
         String keyBMW = bmw3.getModel() + " (" + bmw3.getNrRejestracyjny() + ")";
@@ -85,34 +90,90 @@ public class HelloController {
         } catch (Exception e) {
             System.out.println("Błąd ładowania obrazka: " + e.getMessage());
         }
+        if (mapa != null) {
+            mapa.setOnMouseClicked(event -> { // [cite: 49]
+                if (aktualnySamochod != null) {
+                    double x = event.getX();
+                    double y = event.getY();
+                    System.out.println("Kliknięto mapę: " + x + ", " + y);
+
+                    // Tworzymy cel (odejmujemy połowę wielkości auta, żeby środek auta jechał do kursora)
+                    Pozycja cel = new Pozycja(x - 25, y - 25);
+                    aktualnySamochod.jedzDo(cel);
+                }
+            });
+        } else {
+            System.err.println("UWAGA: Pole 'mapa' jest null. Sprawdź fx:id w FXML!");
+        }
 
         onCarSelection();
     }
 
 
+
     @FXML
     private void onCarSelection() {
+        // 1. Odłączamy nasłuchiwanie od STAREGO samochodu
+        if (aktualnySamochod != null) {
+            aktualnySamochod.removeListener(this);
+        }
+
         String selectedCarKey = carComboBox.getSelectionModel().getSelectedItem();
 
         if (selectedCarKey != null && dostepneSamochody.containsKey(selectedCarKey)) {
+            // Przypisanie nowego samochodu
             this.aktualnySamochod = dostepneSamochody.get(selectedCarKey);
 
+            // 2. Podłączamy nasłuchiwanie do NOWEGO samochodu
+            this.aktualnySamochod.addListener(this);
+
+            // Przypisanie komponentów
             this.silnik = aktualnySamochod.getSilnik();
             this.skrzyniaBiegow = aktualnySamochod.getSkrzyniaBiegow();
             this.sprzeglo = aktualnySamochod.getSprzeglo();
 
-            System.out.println("Wybrano: " + selectedCarKey + ". Max obroty: " + this.silnik.getMaxObroty());
+            System.out.println("Wybrano: " + selectedCarKey);
 
+            // Aktualizacja pól tekstowych
             modelTextField.setText(aktualnySamochod.getModel());
             plateTextField.setText(aktualnySamochod.getNrRejestracyjny());
             weightTextField.setText(String.valueOf(aktualnySamochod.getWaga()));
+
+            // --- NOWA CZĘŚĆ: ŁADOWANIE OBRAZKA ---
+            // Czyścimy stary obrazek, żeby mieć pewność, że zmiana nastąpiła
+            carImageView.setImage(null);
+
+            String sciezka = aktualnySamochod.getSciezkaDoObrazka();
+            if (sciezka != null && !sciezka.isEmpty()) {
+                try {
+                    // Ładujemy plik z resources
+                    var resource = getClass().getResource(sciezka);
+                    if (resource != null) {
+                        Image image = new Image(resource.toExternalForm());
+                        carImageView.setImage(image);
+                    } else {
+                        System.err.println("BŁĄD: Nie znaleziono pliku: " + sciezka);
+                    }
+                } catch (Exception e) {
+                    System.err.println("Błąd ładowania obrazka: " + e.getMessage());
+                }
+            }
+            // -------------------------------------
         }
+
+        // Odświeżenie widoku na start
         refresh();
     }
-
     private void refresh() {
+        // 3. BRAKUJĄCA AKTUALIZACJA POZYCJI OBRAZKA
+        if (aktualnySamochod != null && carImageView != null) {
+            // Pobieramy aktualną pozycję z modelu i ustawiamy na widoku
+            carImageView.setTranslateX(aktualnySamochod.getPozycja().getX());
+            carImageView.setTranslateY(aktualnySamochod.getPozycja().getY());
+        }
+
         if (mojSamochod != null) {
-            System.out.println("Odświeżam widok...");
+            // System.out.println("Odświeżam widok..."); // Możesz zakomentować, żeby nie śmiecić w konsoli
         }
 
         if (skrzyniaBiegow != null && gearTextField != null) {
@@ -125,14 +186,9 @@ public class HelloController {
             rpmTextField.setText(String.valueOf(aktualneObroty));
         }
         if (sprzeglo != null && clutchStateTextField != null) {
-            String stan = sprzeglo.getStanTekstowy();
-
-            clutchStateTextField.setText(stan);
-
-            System.out.println("DEBUG: Ustawiono stan sprzęgła: " + stan);
+            clutchStateTextField.setText(sprzeglo.getStanTekstowy());
         }
     }
-
     @FXML
     private void onAddButton() {
         try {
@@ -247,5 +303,14 @@ public class HelloController {
             this.sprzeglo.zwolnij();
         }
         refresh();
+    }
+
+    @Override
+    public void update() {
+        // [cite: 58, 162] Ważne: Odświeżanie GUI musi być w Platform.runLater,
+        // ponieważ wątek Samochodu jest inny niż wątek JavaFX.
+        Platform.runLater(() -> {
+            refresh(); // Wywołanie twojej metody odświeżającej widok
+        });
     }
 }

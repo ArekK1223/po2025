@@ -85,16 +85,15 @@
     </left>
 
     <center>
-        <StackPane style="-fx-background-color: lightgreen;">
-            <VBox alignment="CENTER" spacing="10">
-                <ImageView fx:id="carImageView" fitHeight="200.0" fitWidth="300.0" preserveRatio="true">
+        <Pane fx:id="mapa" style="-fx-background-color: lightgreen;" prefHeight="600.0" prefWidth="600.0">
+            <children>
+                <ImageView fx:id="carImageView" fitHeight="50.0" fitWidth="100.0" preserveRatio="true" x="20" y="20">
                     <image>
                         <Image url="https://img.icons8.com/fluency/240/car.png"/>
                     </image>
                 </ImageView>
-                <Label text="Car"/>
-            </VBox>
-        </StackPane>
+            </children>
+        </Pane>
     </center>
 
 </BorderPane>
