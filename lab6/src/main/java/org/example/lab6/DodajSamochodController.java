@@ -2,28 +2,38 @@ package org.example.lab6;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage; // Konieczne do zamknięcia okna
-
+import javafx.stage.Stage;
+import org.example.lab6.model.Samochod;
 import org.example.lab6.model.Silnik;
 import org.example.lab6.model.SkrzyniaBiegow;
 import org.example.lab6.model.Sprzeglo;
-import org.example.lab6.model.Samochod;
 
 public class DodajSamochodController {
 
-    // Pola muszą pasować do fx:id w DodajSamochod.fxml
+    // --- Sekcja Samochód ---
     @FXML private TextField modelInput;
     @FXML private TextField plateInput;
     @FXML private TextField weightInput;
 
-    // Przykładowe pola dla konfiguracji komponentów
+    // --- Sekcja Silnik ---
+    @FXML private TextField engineNameInput;
+    @FXML private TextField enginePriceInput;
+    @FXML private TextField engineWeightInput;
     @FXML private TextField maxRpmInput;
+
+    // --- Sekcja Skrzynia ---
+    @FXML private TextField gearboxNameInput;
+    @FXML private TextField gearboxPriceInput;
+    @FXML private TextField gearboxWeightInput;
     @FXML private TextField maxGearsInput;
 
-    // W DodajSamochodController.java (dodaj tę metodę)
+    // --- Sekcja Sprzęgło ---
+    @FXML private TextField clutchNameInput;
+    @FXML private TextField clutchPriceInput;
+    @FXML private TextField clutchWeightInput;
+
     @FXML
     private void onCancelButton() {
-        // Zamknięcie okna
         Stage stage = (Stage) modelInput.getScene().getWindow();
         stage.close();
     }
@@ -31,41 +41,62 @@ public class DodajSamochodController {
     @FXML
     private void onDodajButton() {
         try {
-            // 1. Zbieranie i walidacja danych (upewnienie się, że pola nie są puste)
+            // 1. Walidacja podstawowa
             String model = modelInput.getText().trim();
             String registration = plateInput.getText().trim();
 
             if (model.isEmpty() || registration.isEmpty()) {
-                System.err.println("Błąd: Model i nr rejestracyjny nie mogą być puste.");
+                System.err.println("Błąd: Model i nr rejestracyjny są wymagane!");
                 return;
             }
 
-            // 2. Parsowanie liczb (używamy wartości domyślnych, jeśli pola są puste)
-            double weight = weightInput.getText().trim().isEmpty() ? 1000.0 : Double.parseDouble(weightInput.getText());
-            int maxRpm = maxRpmInput.getText().trim().isEmpty() ? 7000 : Integer.parseInt(maxRpmInput.getText());
-            int maxGears = maxGearsInput.getText().trim().isEmpty() ? 6 : Integer.parseInt(maxGearsInput.getText());
+            // 2. Pobieranie danych Samochodu
+            double carWeight = Double.parseDouble(weightInput.getText());
 
-            // 3. Tworzenie komponentów
-            Silnik nowySilnik = new Silnik(maxRpm, 0);
-            SkrzyniaBiegow nowaSkrzynia = new SkrzyniaBiegow(0, maxGears);
-            Sprzeglo noweSprzeglo = new Sprzeglo();
+            // 3. Tworzenie SILNIKA (Nazwa, Cena, Waga, MaxRPM, StartoweRPM)
+            String engName = engineNameInput.getText();
+            double engPrice = Double.parseDouble(enginePriceInput.getText());
+            double engWeight = Double.parseDouble(engineWeightInput.getText());
+            int maxRpm = Integer.parseInt(maxRpmInput.getText());
+
+            // Konstruktor zgodny z HelloController (nazwa, cena, waga, maxRpm, aktualneRpm)
+            Silnik nowySilnik = new Silnik(engName, engPrice, engWeight, maxRpm, 0);
+
+            // 4. Tworzenie SKRZYNI (Nazwa, Cena, Waga, StartowyBieg, MaxBiegow)
+            String gearName = gearboxNameInput.getText();
+            double gearPrice = Double.parseDouble(gearboxPriceInput.getText());
+            double gearWeight = Double.parseDouble(gearboxWeightInput.getText());
+            int maxGears = Integer.parseInt(maxGearsInput.getText());
+
+            SkrzyniaBiegow nowaSkrzynia = new SkrzyniaBiegow(gearName, gearPrice, gearWeight, 0, maxGears);
+
+            // 5. Tworzenie SPRZĘGŁA (Nazwa, Cena, Waga)
+            String clutchName = clutchNameInput.getText();
+            double clutchPrice = Double.parseDouble(clutchPriceInput.getText());
+            double clutchWeight = Double.parseDouble(clutchWeightInput.getText());
+
+            Sprzeglo noweSprzeglo = new Sprzeglo(clutchName, clutchPrice, clutchWeight);
+
+            // 6. Finalne utworzenie samochodu
+            // Domyślny obrazek, bo nie mamy pola input na ścieżkę (można dodać w przyszłości)
             String domyslnaSciezka = "/images/car.png";
 
-            // 4. Tworzenie obiektu Samochod (Zakładamy, że konstruktor Samochod jest poprawny)
-            Samochod nowySamochod = new Samochod(model, registration, weight,
+            Samochod nowySamochod = new Samochod(model, registration, carWeight,
                     nowySilnik, nowaSkrzynia, noweSprzeglo, domyslnaSciezka);
 
-            // 5. KLUCZOWE: Wywołanie statycznej metody w HelloController
+            // 7. Dodanie do głównego kontrolera
             HelloController.addCarToMapAndList(nowySamochod);
 
-            // 6. Zamknięcie okna (Stage)
+            // 8. Zamknięcie okna
             Stage stage = (Stage) modelInput.getScene().getWindow();
             stage.close();
 
         } catch (NumberFormatException e) {
-            System.err.println("Błąd formatu: Upewnij się, że Waga, Max RPM i Max Bieg są poprawnymi liczbami.");
+            System.err.println("Błąd danych: Upewnij się, że w polach liczbowych (Cena, Waga, RPM) są poprawne liczby.");
+            // Opcjonalnie: Wyświetl tutaj Alert (okienko z błędem)
         } catch (Exception e) {
-            System.err.println("Wystąpił nieoczekiwany błąd podczas dodawania samochodu: " + e.getMessage());
+            System.err.println("Wystąpił nieoczekiwany błąd: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 }

@@ -258,12 +258,54 @@ public class HelloController implements Listener{
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/DodajSamochod.fxml"));
 
+            // Ładujemy widok do zmiennej
+            javafx.scene.Parent root = loader.load();
+
             Stage stage = new Stage();
-            stage.setScene(new Scene(loader.load()));
+            stage.setScene(new Scene(root));
             stage.setTitle("Dodaj nowy samochód");
+
+            // --- KLUCZOWA POPRAWKA DLA PEŁNEGO EKRANU ---
+
+            // 1. Pobieramy główne okno (Stage), używając dowolnego elementu widocznego na ekranie (np. carComboBox lub addButton)
+            Stage mainStage = (Stage) carComboBox.getScene().getWindow();
+
+            // 2. Ustawiamy główne okno jako właściciela (Owner)
+            // Dzięki temu nowe okno zawsze pojawi się NA WIERZCHU pełnego ekranu
+            stage.initOwner(mainStage);
+
+            // 3. Ustawiamy tryb modalny - nie da się klikać w główne okno, dopóki nie zamkniesz okienka dodawania
+            stage.initModality(javafx.stage.Modality.WINDOW_MODAL);
+
+            // ---------------------------------------------
+
             stage.show();
+
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+    @FXML
+    private void onDeleteButton() {
+        String key = carComboBox.getValue();
+        if (key == null) return;
+
+        // 1. Zatrzymanie silnika (żeby nie buczał w tle po usunięciu)
+        if (aktualnySamochod != null) aktualnySamochod.getSilnik().zatrzymaj();
+
+        // 2. Usunięcie z mapy i z listy rozwijanej
+        dostepneSamochody.remove(key);
+        carComboBox.getItems().remove(key);
+
+        // 3. Sprytne odświeżenie:
+        if (!carComboBox.getItems().isEmpty()) {
+            // Jeśli coś zostało, wybierz pierwsze (to samo wywoła onCarSelection i wypełni pola!)
+            carComboBox.getSelectionModel().selectFirst();
+        } else {
+            // Jeśli nic nie ma, czyścimy tylko główne elementy
+            aktualnySamochod = null;
+            carImageView.setImage(null);
+            refresh(); // Wyzeruje liczniki
         }
     }
 
