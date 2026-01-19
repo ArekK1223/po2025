@@ -40,6 +40,22 @@ public class HelloController implements Listener{
     @FXML private TextField gearTextField;
     @FXML private TextField rpmTextField;
     @FXML private TextField clutchStateTextField;
+    // W HelloController.java - sekcja pól @FXML
+
+    // --- Skrzynia Biegów ---
+    @FXML private TextField skrzyniaNazwaField;
+    @FXML private TextField skrzyniaCenaField;
+    @FXML private TextField skrzyniaWagaField;
+
+    // --- Silnik ---
+    @FXML private TextField silnikNazwaField;
+    @FXML private TextField silnikCenaField;
+    @FXML private TextField silnikWagaField;
+
+    // --- Sprzęgło ---
+    @FXML private TextField sprzegloNazwaField;
+    @FXML private TextField sprzegloCenaField;
+    @FXML private TextField sprzegloWagaField;
 
 
     private static HelloController instance;
@@ -47,23 +63,44 @@ public class HelloController implements Listener{
 
     public HelloController() {
         instance = this;
-        mojSamochod = new Samochod();
-        this.silnik = new Silnik(7000, 0);
-        this.skrzyniaBiegow = new SkrzyniaBiegow(0, 6);
-        this.sprzeglo = new Sprzeglo();
-    }
+        // Musisz podać przykładowe dane, bo konstruktory teraz wymagają napisów i cen
+        this.silnik = new Silnik("Testowy", 0, 0, 7000, 0);
+        this.skrzyniaBiegow = new SkrzyniaBiegow("Testowa", 0, 0, 0, 6);
+        this.sprzeglo = new Sprzeglo("Testowe", 0, 0);
 
+        // Uwaga: Jeśli Samochod też wymaga zmian w konstruktorze, dopasuj to.
+        // Jeśli Samochod w środku tylko przypisuje obiekty, to jest OK.
+        mojSamochod = new Samochod();
+    }
     @FXML
     public void initialize() {
         System.out.println("HelloController initialized");
 
+        // 1. Audi A4 (Diesel)
+        Silnik silnikAudi = new Silnik("2.0 TDI", 15000.0, 180.0, 6000, 0);
+        SkrzyniaBiegow skrzyniaAudi = new SkrzyniaBiegow("S-Tronic", 8000.0, 60.0, 0, 7);
+        Sprzeglo sprzegloAudi = new Sprzeglo("Dwumasowe Audi", 2500.0, 12.0);
+
         Samochod audiA4 = new Samochod("Audi A4", "KR12345", 1550.0,
-                new Silnik(7500, 0), new SkrzyniaBiegow(0, 7), new Sprzeglo(), "/images/audi.png");
+                silnikAudi, skrzyniaAudi, sprzegloAudi, "/images/audi.png");
+
+
+        // 2. BMW Serii 3 (Benzyna Sport)
+        Silnik silnikBMW = new Silnik("3.0 R6 Turbo", 25000.0, 210.0, 8000, 0);
+        SkrzyniaBiegow skrzyniaBMW = new SkrzyniaBiegow("ZF 8HP", 12000.0, 75.0, 0, 8);
+        Sprzeglo sprzegloBMW = new Sprzeglo("Sportowe BMW", 3000.0, 15.0);
 
         Samochod bmw3 = new Samochod("BMW 3 Series", "WR00001", 1480.0,
-                new Silnik(8000, 0), new SkrzyniaBiegow(0, 6), new Sprzeglo(), "/images/bmw.png");
+                silnikBMW, skrzyniaBMW, sprzegloBMW, "/images/bmw.png");
+
+
+        // 3. Fiat Panda (Ekonomiczny)
+        Silnik silnikFiat = new Silnik("1.2 Fire", 3500.0, 95.0, 5500, 0);
+        SkrzyniaBiegow skrzyniaFiat = new SkrzyniaBiegow("Manual 5b", 1500.0, 35.0, 0, 5);
+        Sprzeglo sprzegloFiat = new Sprzeglo("Standardowe Fiat", 400.0, 8.0);
+
         Samochod fiatPanda = new Samochod("Fiat Panda", "EL99999", 950.0,
-                new Silnik(5500, 0), new SkrzyniaBiegow(0, 5), new Sprzeglo(), "/images/fiat.png");
+                silnikFiat, skrzyniaFiat, sprzegloFiat, "/images/fiat.png");
 
         String keyA4 = audiA4.getModel() + " (" + audiA4.getNrRejestracyjny() + ")";
         String keyBMW = bmw3.getModel() + " (" + bmw3.getNrRejestracyjny() + ")";
@@ -158,12 +195,34 @@ public class HelloController implements Listener{
                     System.err.println("Błąd ładowania obrazka: " + e.getMessage());
                 }
             }
+
             // -------------------------------------
         }
+        if (aktualnySamochod != null) {
+            // POBIERAMY PODZESPOŁY
+            Silnik s = aktualnySamochod.getSilnik();
+            SkrzyniaBiegow sb = aktualnySamochod.getSkrzyniaBiegow();
+            Sprzeglo sp = aktualnySamochod.getSprzeglo();
 
-        // Odświeżenie widoku na start
+            // 1. WYPEŁNIAMY DANE SKRZYNI (jeśli pole w FXML istnieje)
+            if (skrzyniaNazwaField != null) skrzyniaNazwaField.setText(sb.getNazwa());
+            if (skrzyniaCenaField != null)  skrzyniaCenaField.setText(String.valueOf(sb.getCena()));
+            if (skrzyniaWagaField != null)  skrzyniaWagaField.setText(String.valueOf(sb.getWaga()));
+
+            // 2. WYPEŁNIAMY DANE SILNIKA
+            if (silnikNazwaField != null) silnikNazwaField.setText(s.getNazwa());
+            if (silnikCenaField != null)  silnikCenaField.setText(String.valueOf(s.getCena()));
+            if (silnikWagaField != null)  silnikWagaField.setText(String.valueOf(s.getWaga()));
+
+            // 3. WYPEŁNIAMY DANE SPRZĘGŁA
+            if (sprzegloNazwaField != null) sprzegloNazwaField.setText(sp.getNazwa());
+            if (sprzegloCenaField != null)  sprzegloCenaField.setText(String.valueOf(sp.getCena()));
+            if (sprzegloWagaField != null)  sprzegloWagaField.setText(String.valueOf(sp.getWaga()));
+        }
+
         refresh();
     }
+
     private void refresh() {
         // 3. BRAKUJĄCA AKTUALIZACJA POZYCJI OBRAZKA
         if (aktualnySamochod != null && carImageView != null) {
@@ -187,6 +246,11 @@ public class HelloController implements Listener{
         }
         if (sprzeglo != null && clutchStateTextField != null) {
             clutchStateTextField.setText(sprzeglo.getStanTekstowy());
+        }
+        if (speedTextField != null && aktualnySamochod != null) {
+            // Wyświetla prędkość obliczoną w modelu
+            double v = aktualnySamochod.getAktualnaPredkosc();
+            speedTextField.setText(String.format("%.1f km/h", v * 10)); // *10 dla efektu wizualnego
         }
     }
     @FXML

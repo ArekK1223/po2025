@@ -54,36 +54,56 @@ public class Samochod extends Thread {
     public Pozycja getPozycja() {
         return pozycja;
     }
+    public double getAktualnaPredkosc() {
+        // 1. Obejście problemu ze sprzęgłem bez zmieniania jego klasy:
+        // Sprawdzamy, czy opis tekstowy sugeruje, że jest wciśnięte.
+        String stan = sprzeglo.getStanTekstowy();
+        if (stan != null && (stan.contains("Wciśnięte") || stan.contains("rozłączone"))) {
+            return 0.0; // Sprzęgło wciśnięte = brak napędu
+        }
+
+        // 2. Pobieramy dane
+        double obroty = silnik.getObroty();
+        double bieg = skrzyniaBiegow.getAktualnyBieg();
+
+        // 3. Najprostszy wzór na prędkość:
+        // (Obroty * Bieg) / stała kalibracyjna (żeby auto nie latało jak rakieta)
+        // Im mniejszy dzielnik (400.0), tym szybciej auto pojedzie.
+        return (obroty * bieg) / 400.0;
+    }
 
     // 3. Logika wątku (przemieszczanie) [cite: 27, 30]
     @Override
     public void run() {
-        double dt = 0.1; // krok czasowy (100ms = 0.1s) [cite: 29]
-
-        while (true) {
+        while (true) { // Pętla nieskończona
             try {
-                if (cel != null) {
+                // 1. Obliczamy aktualną prędkość (to ta nowa metoda wyżej)
+                double v = getAktualnaPredkosc();
+
+                // 2. Jeśli mamy cel I samochód ma prędkość (dodano gazu i wrzucono bieg)
+                if (cel != null && v > 0) {
                     double dx = cel.getX() - pozycja.getX();
                     double dy = cel.getY() - pozycja.getY();
-                    double odleglosc = Math.sqrt(dx * dx + dy * dy); // [cite: 32]
+                    double odleglosc = Math.sqrt(dx * dx + dy * dy);
 
-                    if (odleglosc > 1.0) { // Jeśli jeszcze nie dotarliśmy
-                        // Obliczenie przesunięcia [cite: 36, 40]
-                        double moveX = predkoscRuchu * dt * (dx / odleglosc);
-                        double moveY = predkoscRuchu * dt * (dy / odleglosc);
+                    if (odleglosc > 5.0) { // Zwiększyłem margines do 5 pikseli, żeby nie drgał
+                        // Przesuwamy się o "v" w stronę celu
+                        double moveX = v * (dx / odleglosc);
+                        double moveY = v * (dy / odleglosc);
 
-                        // Aktualizacja pozycji
                         pozycja = new Pozycja(pozycja.getX() + moveX, pozycja.getY() + moveY);
                     } else {
-                        // Dotarliśmy do celu
+                        // Dojechaliśmy
                         pozycja = cel;
                         cel = null;
                     }
-                    // Powiadomienie widoku o zmianie pozycji [cite: 115]
-                    notifyListeners();
                 }
 
-                Thread.sleep(100); // Czekaj 100ms
+                // 3. Ważne: Odśwież widok
+                notifyListeners();
+
+                // 4. Klatkaż (opóźnienie)
+                Thread.sleep(50); // Mniej niż 100ms dla płynniejszego ruchu
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

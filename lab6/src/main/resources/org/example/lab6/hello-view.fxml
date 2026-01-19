@@ -45,9 +45,9 @@
 
             <TitledPane text="Skrzynia Biegów" collapsible="true" expanded="false">
                 <VBox spacing="5.0">
-                    <Label text="Nazwa"/><TextField fx:id="gearboxNameTextField" editable="false"/>
-                    <Label text="Cena"/><TextField fx:id="gearboxPriceTextField" editable="false"/>
-                    <Label text="Waga"/><TextField fx:id="gearboxWeightTextField" editable="false"/>
+                    <Label text="Nazwa"/><TextField fx:id="skrzyniaNazwaField" editable="false"/>
+                    <Label text="Cena"/><TextField fx:id="skrzyniaCenaField" editable="false"/>
+                    <Label text="Waga"/><TextField fx:id="skrzyniaWagaField" editable="false"/>
                     <Label text="Bieg"/><TextField fx:id="gearTextField" editable="false"/>
                     <HBox spacing="10.0">
                         <Button text="Zwiększ bieg" fx:id="gearUpButton" onAction="#onGearUpButton"/>
@@ -58,9 +58,9 @@
 
             <TitledPane text="Silnik" collapsible="true" expanded="false">
                 <VBox spacing="5.0">
-                    <Label text="Nazwa"/><TextField fx:id="engineNameTextField" editable="false"/>
-                    <Label text="Cena"/><TextField fx:id="enginePriceTextField" editable="false"/>
-                    <Label text="Waga"/><TextField fx:id="engineWeightTextField" editable="false"/>
+                    <Label text="Nazwa"/><TextField fx:id="silnikNazwaField" editable="false"/>
+                    <Label text="Cena"/><TextField fx:id="silnikCenaField" editable="false"/>
+                    <Label text="Waga"/><TextField fx:id="silnikWagaField" editable="false"/>
                     <Label text="Obroty"/><TextField fx:id="rpmTextField" editable="false"/>
                     <HBox spacing="10.0">
                         <Button text="Dodaj gazu" fx:id="gasButton" onAction="#onGasButton"/>
@@ -71,9 +71,9 @@
 
             <TitledPane text="Sprzęgło" collapsible="true" expanded="false">
                 <VBox spacing="5.0">
-                    <Label text="Nazwa"/><TextField fx:id="clutchNameTextField" editable="false"/>
-                    <Label text="Cena"/><TextField fx:id="clutchPriceTextField" editable="false"/>
-                    <Label text="Waga"/><TextField fx:id="clutchWeightTextField" editable="false"/>
+                    <Label text="Nazwa"/><TextField fx:id="sprzegloNazwaField" editable="false"/>
+                    <Label text="Cena"/><TextField fx:id="sprzegloCenaField" editable="false"/>
+                    <Label text="Waga"/><TextField fx:id="sprzegloWagaField" editable="false"/>
                     <Label text="Stan"/><TextField fx:id="clutchStateTextField" editable="false"/>
                     <HBox spacing="10.0">
                         <Button text="Wciśnij" fx:id="clutchPressButton" onAction="#onClutchPressButton"/>
