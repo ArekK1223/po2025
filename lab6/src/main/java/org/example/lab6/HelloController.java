@@ -289,23 +289,27 @@ public class HelloController implements Listener{
     private void onDeleteButton() {
         String key = carComboBox.getValue();
         if (key == null) return;
-
-        // 1. Zatrzymanie silnika (żeby nie buczał w tle po usunięciu)
-        if (aktualnySamochod != null) aktualnySamochod.getSilnik().zatrzymaj();
-
-        // 2. Usunięcie z mapy i z listy rozwijanej
+        if (aktualnySamochod != null) {
+            aktualnySamochod.removeListener(this); // Ważne: odłączamy listenera
+            aktualnySamochod.getSilnik().zatrzymaj();
+        }
         dostepneSamochody.remove(key);
         carComboBox.getItems().remove(key);
 
-        // 3. Sprytne odświeżenie:
         if (!carComboBox.getItems().isEmpty()) {
-            // Jeśli coś zostało, wybierz pierwsze (to samo wywoła onCarSelection i wypełni pola!)
+
             carComboBox.getSelectionModel().selectFirst();
         } else {
-            // Jeśli nic nie ma, czyścimy tylko główne elementy
             aktualnySamochod = null;
+
+            this.silnik = null;
+            this.skrzyniaBiegow = null;
+            this.sprzeglo = null;
+
+            // Usuwamy obrazek
             carImageView.setImage(null);
-            refresh(); // Wyzeruje liczniki
+
+            wyczyscPola();
         }
     }
 
@@ -418,5 +422,26 @@ public class HelloController implements Listener{
         Platform.runLater(() -> {
             refresh(); // Wywołanie twojej metody odświeżającej widok
         });
+    }
+    private void wyczyscPola() {
+        if (modelTextField != null) modelTextField.setText("");
+        if (plateTextField != null) plateTextField.setText("");
+        if (weightTextField != null) weightTextField.setText("");
+        if (speedTextField != null) speedTextField.setText("");
+        if (gearTextField != null) gearTextField.setText("");
+        if (rpmTextField != null) rpmTextField.setText("");
+        if (clutchStateTextField != null) clutchStateTextField.setText("");
+
+        if (skrzyniaNazwaField != null) skrzyniaNazwaField.setText("");
+        if (skrzyniaCenaField != null) skrzyniaCenaField.setText("");
+        if (skrzyniaWagaField != null) skrzyniaWagaField.setText("");
+
+        if (silnikNazwaField != null) silnikNazwaField.setText("");
+        if (silnikCenaField != null) silnikCenaField.setText("");
+        if (silnikWagaField != null) silnikWagaField.setText("");
+
+        if (sprzegloNazwaField != null) sprzegloNazwaField.setText("");
+        if (sprzegloCenaField != null) sprzegloCenaField.setText("");
+        if (sprzegloWagaField != null) sprzegloWagaField.setText("");
     }
 }

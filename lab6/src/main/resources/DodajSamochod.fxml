@@ -20,13 +20,12 @@
         <VBox spacing="10.0">
             <VBox spacing="5.0" style="-fx-border-color: #cccccc; -fx-border-radius: 5; -fx-padding: 10;">
                 <Label text="DANE POJAZDU" style="-fx-font-weight: bold; -fx-text-fill: #555555;"/>
-
                 <GridPane hgap="10" vgap="5">
                     <Label text="Model:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
                     <TextField fx:id="modelInput" promptText="np. Porsche 911" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
 
                     <Label text="Rejestracja:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-                    <TextField fx:id="plateInput" promptText="np. WA12345" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+                    <TextField fx:id="plateInput" promptText="WA12345" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
 
                     <Label text="Waga auta (kg):" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
                     <TextField fx:id="weightInput" text="1500" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
@@ -34,20 +33,13 @@
             </VBox>
 
             <VBox spacing="5.0" style="-fx-border-color: #cccccc; -fx-border-radius: 5; -fx-padding: 10;">
-                <Label text="SILNIK" style="-fx-font-weight: bold; -fx-text-fill: #555555;"/>
-
+                <Label text="WYBÓR SILNIKA" style="-fx-font-weight: bold; -fx-text-fill: #555555;"/>
                 <GridPane hgap="10" vgap="5">
-                    <Label text="Nazwa:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-                    <TextField fx:id="engineNameInput" text="V8 Turbo" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+                    <Label text="Silnik:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                    <ComboBox fx:id="engineComboBox" prefWidth="160.0" GridPane.rowIndex="0" GridPane.columnIndex="1" promptText="Wybierz silnik..."/>
 
-                    <Label text="Cena:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-                    <TextField fx:id="enginePriceInput" text="25000" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
-
-                    <Label text="Waga (kg):" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-                    <TextField fx:id="engineWeightInput" text="200" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
-
-                    <Label text="Max RPM:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
-                    <TextField fx:id="maxRpmInput" text="7000" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+                    <Label text="Info:" textFill="#777777" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                    <Label text="Parametry zostaną przypisane automatycznie" wrapText="true" maxWidth="150" style="-fx-font-size: 10;" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
                 </GridPane>
             </VBox>
         </VBox>
@@ -55,16 +47,15 @@
         <VBox spacing="10.0">
             <VBox spacing="5.0" style="-fx-border-color: #cccccc; -fx-border-radius: 5; -fx-padding: 10;">
                 <Label text="SKRZYNIA BIEGÓW" style="-fx-font-weight: bold; -fx-text-fill: #555555;"/>
-
                 <GridPane hgap="10" vgap="5">
                     <Label text="Nazwa:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-                    <TextField fx:id="gearboxNameInput" text="Automat 8b" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+                    <TextField fx:id="gearboxNameInput" text="Manualna 6b" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
 
                     <Label text="Cena:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-                    <TextField fx:id="gearboxPriceInput" text="8000" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+                    <TextField fx:id="gearboxPriceInput" text="4000" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
 
                     <Label text="Waga (kg):" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-                    <TextField fx:id="gearboxWeightInput" text="80" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+                    <TextField fx:id="gearboxWeightInput" text="50" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
 
                     <Label text="Ilość biegów:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
                     <TextField fx:id="maxGearsInput" text="6" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
@@ -73,16 +64,15 @@
 
             <VBox spacing="5.0" style="-fx-border-color: #cccccc; -fx-border-radius: 5; -fx-padding: 10;">
                 <Label text="SPRZĘGŁO" style="-fx-font-weight: bold; -fx-text-fill: #555555;"/>
-
                 <GridPane hgap="10" vgap="5">
                     <Label text="Nazwa:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-                    <TextField fx:id="clutchNameInput" text="Sportowe" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+                    <TextField fx:id="clutchNameInput" text="Standard" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
 
                     <Label text="Cena:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-                    <TextField fx:id="clutchPriceInput" text="1500" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+                    <TextField fx:id="clutchPriceInput" text="1000" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
 
                     <Label text="Waga (kg):" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-                    <TextField fx:id="clutchWeightInput" text="15" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+                    <TextField fx:id="clutchWeightInput" text="10" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
                 </GridPane>
             </VBox>
         </VBox>
@@ -92,7 +82,7 @@
 
     <HBox spacing="10.0" alignment="CENTER_RIGHT">
         <Button text="Anuluj" onAction="#onCancelButton" prefWidth="80"/>
-        <Button text="Dodaj pojazd" onAction="#onDodajButton" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold;" prefWidth="120"/>
+        <Button text="Dodaj pojazd" onAction="#onDodajButton"
+                style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold;" prefWidth="120"/>
     </HBox>
-
 </VBox>

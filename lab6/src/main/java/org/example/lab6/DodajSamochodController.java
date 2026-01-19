@@ -1,6 +1,7 @@
 package org.example.lab6;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import org.example.lab6.model.Samochod;
@@ -8,95 +9,96 @@ import org.example.lab6.model.Silnik;
 import org.example.lab6.model.SkrzyniaBiegow;
 import org.example.lab6.model.Sprzeglo;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class DodajSamochodController {
 
-    // --- Sekcja Samochód ---
     @FXML private TextField modelInput;
     @FXML private TextField plateInput;
     @FXML private TextField weightInput;
 
-    // --- Sekcja Silnik ---
-    @FXML private TextField engineNameInput;
-    @FXML private TextField enginePriceInput;
-    @FXML private TextField engineWeightInput;
-    @FXML private TextField maxRpmInput;
+    // Pole dla ComboBoxa z FXML
+    @FXML private ComboBox<String> engineComboBox;
 
-    // --- Sekcja Skrzynia ---
+    // Pozostałe komponenty (uproszczone dla przykładu)
     @FXML private TextField gearboxNameInput;
     @FXML private TextField gearboxPriceInput;
     @FXML private TextField gearboxWeightInput;
     @FXML private TextField maxGearsInput;
 
-    // --- Sekcja Sprzęgło ---
     @FXML private TextField clutchNameInput;
     @FXML private TextField clutchPriceInput;
     @FXML private TextField clutchWeightInput;
 
+    // Mapa przechowująca definicje dostępnych silników
+    private Map<String, Silnik> bibliotekaSilnikow = new HashMap<>();
+
     @FXML
-    private void onCancelButton() {
-        Stage stage = (Stage) modelInput.getScene().getWindow();
-        stage.close();
+    public void initialize() {
+        // Tworzymy bazę dostępnych silników
+        Silnik s1 = new Silnik("1.2 Fire (Eco)", 3000.0, 100.0, 5500, 0);
+        Silnik s2 = new Silnik("2.0 TDI (Diesel)", 15000.0, 180.0, 6000, 0);
+        Silnik s3 = new Silnik("4.0 V8 (Sport)", 45000.0, 250.0, 8500, 0);
+
+        bibliotekaSilnikow.put(s1.getNazwa(), s1);
+        bibliotekaSilnikow.put(s2.getNazwa(), s2);
+        bibliotekaSilnikow.put(s3.getNazwa(), s3);
+
+        // Wypełniamy ComboBox nazwami z mapy
+        engineComboBox.getItems().addAll(bibliotekaSilnikow.keySet());
+        engineComboBox.getSelectionModel().selectFirst();
     }
 
     @FXML
     private void onDodajButton() {
         try {
-            // 1. Walidacja podstawowa
-            String model = modelInput.getText().trim();
-            String registration = plateInput.getText().trim();
+            // 1. Pobieramy dane auta
+            String model = modelInput.getText();
+            String plate = plateInput.getText();
+            double weight = Double.parseDouble(weightInput.getText());
 
-            if (model.isEmpty() || registration.isEmpty()) {
-                System.err.println("Błąd: Model i nr rejestracyjny są wymagane!");
-                return;
-            }
+            // 2. Pobieramy wybrany silnik z mapy
+            String wybrano = engineComboBox.getValue();
+            Silnik wybranySilnik = bibliotekaSilnikow.get(wybrano);
 
-            // 2. Pobieranie danych Samochodu
-            double carWeight = Double.parseDouble(weightInput.getText());
+            // 3. Pobieramy dane skrzyni (z pól tekstowych)
+            SkrzyniaBiegow sb = new SkrzyniaBiegow(
+                    gearboxNameInput.getText(),
+                    Double.parseDouble(gearboxPriceInput.getText()),
+                    Double.parseDouble(gearboxWeightInput.getText()),
+                    0,
+                    Integer.parseInt(maxGearsInput.getText())
+            );
 
-            // 3. Tworzenie SILNIKA (Nazwa, Cena, Waga, MaxRPM, StartoweRPM)
-            String engName = engineNameInput.getText();
-            double engPrice = Double.parseDouble(enginePriceInput.getText());
-            double engWeight = Double.parseDouble(engineWeightInput.getText());
-            int maxRpm = Integer.parseInt(maxRpmInput.getText());
+            // 4. Pobieramy dane sprzęgła
+            Sprzeglo sp = new Sprzeglo(
+                    clutchNameInput.getText(),
+                    Double.parseDouble(clutchPriceInput.getText()),
+                    Double.parseDouble(clutchWeightInput.getText())
+            );
 
-            // Konstruktor zgodny z HelloController (nazwa, cena, waga, maxRpm, aktualneRpm)
-            Silnik nowySilnik = new Silnik(engName, engPrice, engWeight, maxRpm, 0);
+            // 5. Tworzymy obiekt samochodu (możesz tu dodać wybór obrazka, np. domyślny)
+            Samochod nowy = new Samochod(model, plate, weight, wybranySilnik, sb, sp, "/images/car.png");
 
-            // 4. Tworzenie SKRZYNI (Nazwa, Cena, Waga, StartowyBieg, MaxBiegow)
-            String gearName = gearboxNameInput.getText();
-            double gearPrice = Double.parseDouble(gearboxPriceInput.getText());
-            double gearWeight = Double.parseDouble(gearboxWeightInput.getText());
-            int maxGears = Integer.parseInt(maxGearsInput.getText());
+            // 6. Wysyłamy do głównego kontrolera
+            HelloController.addCarToMapAndList(nowy);
 
-            SkrzyniaBiegow nowaSkrzynia = new SkrzyniaBiegow(gearName, gearPrice, gearWeight, 0, maxGears);
-
-            // 5. Tworzenie SPRZĘGŁA (Nazwa, Cena, Waga)
-            String clutchName = clutchNameInput.getText();
-            double clutchPrice = Double.parseDouble(clutchPriceInput.getText());
-            double clutchWeight = Double.parseDouble(clutchWeightInput.getText());
-
-            Sprzeglo noweSprzeglo = new Sprzeglo(clutchName, clutchPrice, clutchWeight);
-
-            // 6. Finalne utworzenie samochodu
-            // Domyślny obrazek, bo nie mamy pola input na ścieżkę (można dodać w przyszłości)
-            String domyslnaSciezka = "/images/car.png";
-
-            Samochod nowySamochod = new Samochod(model, registration, carWeight,
-                    nowySilnik, nowaSkrzynia, noweSprzeglo, domyslnaSciezka);
-
-            // 7. Dodanie do głównego kontrolera
-            HelloController.addCarToMapAndList(nowySamochod);
-
-            // 8. Zamknięcie okna
-            Stage stage = (Stage) modelInput.getScene().getWindow();
-            stage.close();
+            // 7. Zamykamy okno
+            closeWindow();
 
         } catch (NumberFormatException e) {
-            System.err.println("Błąd danych: Upewnij się, że w polach liczbowych (Cena, Waga, RPM) są poprawne liczby.");
-            // Opcjonalnie: Wyświetl tutaj Alert (okienko z błędem)
-        } catch (Exception e) {
-            System.err.println("Wystąpił nieoczekiwany błąd: " + e.getMessage());
-            e.printStackTrace();
+            System.err.println("Błąd: Sprawdź czy pola liczbowe są poprawne!");
         }
+    }
+
+    @FXML
+    private void onCancelButton() {
+        closeWindow();
+    }
+
+    private void closeWindow() {
+        Stage stage = (Stage) modelInput.getScene().getWindow();
+        stage.close();
     }
 }
